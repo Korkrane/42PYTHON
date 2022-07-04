@@ -1,5 +1,6 @@
 import string
 
+
 def text_analyzer(*args):
     """This function counts the number of upper characters, lower characters, punctuation and spaces in a given text."""
 
@@ -7,25 +8,25 @@ def text_analyzer(*args):
         print("ERROR")
         return
     elif len(args) == 0:
-        print("What is the text to analyze?")
-        myString=input()
+        print("Type the text you want to analyze")
+        myString = input()
     else:
-        myString=args[0]
-    upperCount=0
-    lowerCount=0
-    spaceCount=0
-    puncCount=0
+        myString = args[0]
+    upperCount = 0
+    lowerCount = 0
+    spaceCount = 0
+    puncCount = 0
     for i in myString:
         if i.islower():
-            lowerCount+=1
+            lowerCount += 1
         elif i.isupper():
-            upperCount+=1
+            upperCount += 1
         elif i.isspace():
-            spaceCount+=1
+            spaceCount += 1
         elif i in string.punctuation:
-            puncCount+=1
+            puncCount += 1
 
-    print("The text contains " + str(upperCount + lowerCount + spaceCount + puncCount) + " characters:")
+    print("The text contains " + str(len(myString)) + " characters:")
     print("- " + str(upperCount) + " upper letters")
     print("- " + str(lowerCount) + " lower letters")
     print("- " + str(puncCount) + " punctuation marks")

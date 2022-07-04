@@ -1,10 +1,12 @@
 import sys
 
+
 def usage():
     print("Usage: python operations.py <number1> <number2>")
     print("Example:")
     print("\tpython operations.py 10 3")
     exit()
+
 
 def main():
     args = sys.argv[1:]
@@ -30,6 +32,7 @@ def main():
     except ValueError:
         print("InputError: only numbers\n")
         usage()
+
 
 if __name__ == "__main__":
     main()
