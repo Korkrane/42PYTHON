@@ -6,13 +6,11 @@ class Vector:
                 self.shape = (len(arg), 1)
                 for iList in arg:
                     for i in iList:
-                        # print(i)
                         if not isinstance(i, float):
                             raise ValueError("Must be floats only")
             else:  # row
                 self.shape = (1, len(arg[0]))
                 for i in arg[0]:
-                    # print(i)
                     if not isinstance(i, float):
                         raise ValueError("Must be floats only")
 
@@ -28,7 +26,7 @@ class Vector:
             if len(arg) > 2:
                 raise ValueError("Range constructor len > 2")
             if not isinstance(arg[0], int) or not isinstance(arg[1], int):
-                raise ValueError("range with weird stuff")
+                raise ValueError("range with not int value")
             if arg[1] < arg[0]:
                 raise ValueError("impossible range")
             self.shape = (arg[1] - arg[0], 1)
@@ -37,14 +35,18 @@ class Vector:
                 self.values.append([float(i)])
 
     def dot(self, other):
+        if not isinstance(other, Vector):
+            raise ValueError("dot operations with vector and something else impossible")
         if self.shape != other.shape:
             raise ValueError("dot operations with different vector shapes")
-        if not isinstance(other, Vector):
-            raise ValueError("dot operations with vector and something else")
         ret = 0
         if(self.shape[0] == 1):
-            pass # TODO for row vector 8^D
+            print("row ", end="")
+            for i in range(self.shape[1]):
+                 if type(self.values[0][i]) == float:
+                    ret += self.values[0][i] * other.values[0][i]
         else:
+            print("col ", end="")
             for i in range(self.shape[1]):
                 if type(self.values[i]) == float:
                     ret += self.values[i] * other.values[i]
@@ -56,7 +58,7 @@ class Vector:
     def T(self):  # swap vector's shape
         new = []
         if self.shape[0] == 1:
-            print("row vec", self.values)
+            print("row ", end="")
             #print("a", self.values[0], len(self.values[0]))
 
             for i in range(self.shape[1]):
@@ -64,7 +66,7 @@ class Vector:
                 new.append([self.values[0][i]])
             return Vector(new)
         else:
-            print("col vec")
+            print("col ", end="")
             for i in range(self.shape[0]):
                 # print(self.values[i][0])
                 new.append(self.values[i][0])
@@ -80,7 +82,20 @@ class Vector:
             raise ValueError("Can't add Vector with another type than Vector")
         if self.shape != other.shape:
             raise ValueError("Vectors doesn't have identical shapes")
-        pass
+        new = []
+        if self.shape[0] == 1:
+            print("row ", end="")
+            for i in range(self.shape[1]):
+                new.append(self.values[0][i] + other.values[0][i])
+            tlist = []
+            tlist.append(new)
+            return Vector(tlist)
+
+        else:
+            print("col ", end="")
+            for i in range(self.shape[0]):
+                new.append([self.values[i][0] + other.values[i][0]])
+        return Vector(new)
 
     def __radd__(self, other):
         return self.__add__(other)
@@ -90,26 +105,67 @@ class Vector:
             raise ValueError("Can't sub Vector with another type than Vector")
         if self.shape != other.shape:
             raise ValueError("Vectors doesn't have identical shapes")
-        pass
+        new = []
+        if self.shape[0] == 1:
+            print("row ", end="")
+            for i in range(self.shape[1]):
+                new.append(self.values[0][i] - other.values[0][i])
+            tlist = []
+            tlist.append(new)
+            return Vector(tlist)
+
+        else:
+            print("col ", end="")
+            for i in range(self.shape[0]):
+                new.append([self.values[i][0] - other.values[i][0]])
+        return Vector(new)
 
     def __rsub__(self, other):
         return self.__sub__(other)
 
     def __mul__(self, other):
-        pass
+        new = []
+        if self.shape[0] == 1:
+            print("row ", end="")
+            for i in range(self.shape[1]):
+                new.append(self.values[0][i] * other)
+            tlist = []
+            tlist.append(new)
+            return Vector(tlist)
+
+        else:
+            print("col ", end="")
+            for i in range(self.shape[0]):
+                new.append([self.values[i][0] * other])
+        return Vector(new)
 
     def __rmul__(self, other):
+        print("rmul")
         return self.__mul__(other)
 
     def __truediv__(self, other):
-        if other == 0:
-            raise ValueError("can't divide by 0")
+        try:
+            new = []
+            if self.shape[0] == 1:
+                print("row ", end="")
+                for i in range(self.shape[1]):
+                    new.append(self.values[0][i] / other)
+                tlist = []
+                tlist.append(new)
+                return Vector(tlist)
+            else:
+                print("col ", end="")
+                for i in range(self.shape[0]):
+                    new.append([self.values[i][0] / other])
+            return Vector(new)
+        except ZeroDivisionError:
+            print("ZeroDivisionError: division by zero.")
 
     def __rtruediv__(self, other):
-        raise ValueError("Scalar can't be divided by a Vector")
+        raise NotImplementedError("Division of a scalar by a Vector is not defined here.")
 
     def __str__(self):
-        return "Vector(" + str(self.values) + ")"
+        return str(self.values)
 
     def __repr__(self):
         return str(self.values)
