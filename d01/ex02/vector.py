@@ -41,12 +41,10 @@ class Vector:
             raise ValueError("dot operations with different vector shapes")
         ret = 0
         if(self.shape[0] == 1):
-            print("row ", end="")
             for i in range(self.shape[1]):
                  if type(self.values[0][i]) == float:
                     ret += self.values[0][i] * other.values[0][i]
         else:
-            print("col ", end="")
             for i in range(self.shape[1]):
                 if type(self.values[i]) == float:
                     ret += self.values[i] * other.values[i]
@@ -58,22 +56,15 @@ class Vector:
     def T(self):  # swap vector's shape
         new = []
         if self.shape[0] == 1:
-            print("row ", end="")
-            #print("a", self.values[0], len(self.values[0]))
-
             for i in range(self.shape[1]):
-                #print(self.values[0][i])
                 new.append([self.values[0][i]])
             return Vector(new)
         else:
-            print("col ", end="")
             for i in range(self.shape[0]):
-                # print(self.values[i][0])
                 new.append(self.values[i][0])
 
             tlist = []
             tlist.append(new)
-            # print(tlist)
             return Vector(tlist)
         return
 
@@ -84,7 +75,6 @@ class Vector:
             raise ValueError("Vectors doesn't have identical shapes")
         new = []
         if self.shape[0] == 1:
-            print("row ", end="")
             for i in range(self.shape[1]):
                 new.append(self.values[0][i] + other.values[0][i])
             tlist = []
@@ -92,7 +82,6 @@ class Vector:
             return Vector(tlist)
 
         else:
-            print("col ", end="")
             for i in range(self.shape[0]):
                 new.append([self.values[i][0] + other.values[i][0]])
         return Vector(new)
@@ -107,7 +96,6 @@ class Vector:
             raise ValueError("Vectors doesn't have identical shapes")
         new = []
         if self.shape[0] == 1:
-            print("row ", end="")
             for i in range(self.shape[1]):
                 new.append(self.values[0][i] - other.values[0][i])
             tlist = []
@@ -115,7 +103,6 @@ class Vector:
             return Vector(tlist)
 
         else:
-            print("col ", end="")
             for i in range(self.shape[0]):
                 new.append([self.values[i][0] - other.values[i][0]])
         return Vector(new)
@@ -126,7 +113,6 @@ class Vector:
     def __mul__(self, other):
         new = []
         if self.shape[0] == 1:
-            print("row ", end="")
             for i in range(self.shape[1]):
                 new.append(self.values[0][i] * other)
             tlist = []
@@ -134,27 +120,23 @@ class Vector:
             return Vector(tlist)
 
         else:
-            print("col ", end="")
             for i in range(self.shape[0]):
                 new.append([self.values[i][0] * other])
         return Vector(new)
 
     def __rmul__(self, other):
-        print("rmul")
         return self.__mul__(other)
 
     def __truediv__(self, other):
         try:
             new = []
             if self.shape[0] == 1:
-                print("row ", end="")
                 for i in range(self.shape[1]):
                     new.append(self.values[0][i] / other)
                 tlist = []
                 tlist.append(new)
                 return Vector(tlist)
             else:
-                print("col ", end="")
                 for i in range(self.shape[0]):
                     new.append([self.values[i][0] / other])
             return Vector(new)
