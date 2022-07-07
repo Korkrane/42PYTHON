@@ -1,3 +1,4 @@
+from attr import has
 from recipe import Recipe
 from datetime import datetime
 
@@ -35,6 +36,7 @@ class Book:
         """Add a recipe to the book and update last_update"""
         try:
             assert recipe and type(recipe) == Recipe, "Fail to add recipe"
+            assert hasattr(recipe, 'name') and hasattr(recipe, 'cookLvl') and hasattr(recipe, 'cookTime') and hasattr(recipe, 'ingredients') and hasattr(recipe, 'rType'), "Fail to add recipe"
             self.recipes_list[recipe.rType][recipe.name] = recipe
         except AssertionError as e:
             print("AssertionError:", e)
