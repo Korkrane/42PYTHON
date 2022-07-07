@@ -1,28 +1,46 @@
 from book import Book
 from recipe import Recipe
 
-myBook = Book("cookbook")
-recipe1 = Recipe("sandwich", 1, 10, ['ham', 'bread', 'cheese', 'tomatoes'], '', 'lunch')
-recipeFail = Recipe("sandwich", 1, 10, ['ham', 'bread', 'cheese', 'tomatoes'], '', 'test')  # must fail
-recipe2 = Recipe("cake", 5, 60, ['flour', 'sugar', 'eggs'], 'Better hot', 'dessert')
-recipe3 = Recipe("salad", 3, 15, ['avocado', 'arugula', 'tomatoes', 'spinach'], 'Better cold', 'starter')
-recipe4 = Recipe("chips", 1, 20, ['potatoes', 'salt'], 'use oven', 'lunch')
+Recipe("cooki", 0, 10, ["dough", "sugar", "love"], "deliciousness incarnate", "dessert")
 
-to_print1 = str(recipe1)
-print(to_print1)
-print()
+Recipe("cooki", 1.5, 10, ["dough", "sugar", "love"], "deliciousness incarnate", "dessert")
 
-myBook.add_recipe(recipe1)
-myBook.add_recipe(recipe4)
-myBook.add_recipe("lol")  # must fail
-print()
+Recipe("cooki", 1, 10, [], "deliciousness incarnate", "dessert")
 
-myBook.get_recipes_by_types('lunch')
-print()
+cookie = Recipe("cooki", 1, 10, ["dough", "sugar", "love"], "deliciousness incarnate", "dessert")
+print("Congratulations you finally made sime delicous cookies")
 
-myBook.get_recipes_by_types('tost') # must fail
-print()
 
-myBook.get_recipe_by_name('chips')
-print()
-myBook.get_recipe_by_name('test') # must fail
+b = Book("My seductive recipes")
+print(b.creation_date)
+
+# # should be the current date and time
+
+print(b.last_update)
+
+# # should be the same as the creation date or None
+
+crumble = Recipe("Crumble" , 1, 25, ["apples", "flour", "sugar"], "delicious", "dessert")
+b.add_recipe(crumble)
+print(b.last_update)
+
+b.get_recipe_by_name("Crumble")
+
+# should print the recipe
+# AND
+# <Recipe object at x>
+
+b.get_recipe_by_name("Liver Icecream")
+
+# The recipe does not exist
+# The error must be handled in a justifiable manner
+# such as returning None, [], or printing an error message
+
+print(b.get_recipes_by_types("dessert")[0])
+
+# Should print the Crumble recipe
+
+b.get_recipes_by_types("asdasd")
+
+# The recipe type does not exist, error must be handled in a justifiable manner
+# such as returning None, [], or printing an error message

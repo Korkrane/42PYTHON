@@ -1,3 +1,9 @@
+def hasDigitOnly(*args):
+    for i in args:
+        if not isinstance(i, int) and not isinstance(i, float):
+            return (0)
+    return (1)
+
 class Vector:
     def __init__(self, arg):
         if isinstance(arg, list):  # list ctor
@@ -111,6 +117,8 @@ class Vector:
         return self.__sub__(other)
 
     def __mul__(self, other):
+        if not hasDigitOnly(other):
+            raise ValueError("Vector multiplication by weird stuff")
         new = []
         if self.shape[0] == 1:
             for i in range(self.shape[1]):
@@ -129,6 +137,8 @@ class Vector:
 
     def __truediv__(self, other):
         try:
+            if not hasDigitOnly(other):
+                raise ValueError("Vector division by weird stuff")
             new = []
             if self.shape[0] == 1:
                 for i in range(self.shape[1]):

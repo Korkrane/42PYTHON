@@ -7,11 +7,11 @@ class Recipe:
     def __init__(self, name, cookLvl, cookTime, ingredients, description, rType):
         try:
             assert name and type(name) == str, "recipe name"
-            assert cookLvl and type(cookLvl) == int and cookLvl > 0 and cookLvl <= 5, "recipe cookLvl"
-            assert cookTime and type(cookTime) == int and cookTime > 0, "recipe cookTime"
-            assert ingredients and type(ingredients) == list and all(type(i) == str for i in ingredients), "recipe ingredients"
-            assert description is None or type(description) == str, "recipe name"
-            assert rType and type(rType) == str and rType in availableType, "recipe rType"
+            assert cookLvl and type(cookLvl) == int and cookLvl > 0 and cookLvl <= 5, "recipe cookLvl value"
+            assert cookTime and type(cookTime) == int and cookTime > 0, "recipe cookTime value"
+            assert ingredients and type(ingredients) == list and all(type(i) == str for i in ingredients), "recipe ingredients value"
+            assert description is None or type(description) == str, "recipe name value"
+            assert rType and type(rType) == str and rType in availableType, "recipe rType value"
             self.name = name
             self.cookLvl = cookLvl
             self.cookTime = cookTime

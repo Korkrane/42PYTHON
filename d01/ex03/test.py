@@ -1,23 +1,14 @@
 from generator import generator
 
-text = "Le Lorem Ipsum est simplement du faux texte."
-for word in generator(text, sep=" "):
-    print(word)
-print()
+txt="This is a simple string for a basic test. Very simple."
+for elem in generator(txt, sep=' '):
+    print(elem)
 
-for word in generator(text, sep=" ", option="shuffle"):
-    print(word)
-print()
+for elem in generator(txt, sep='.'):
+    print(elem)
 
-for word in generator(text, sep=" ", option="ordered"):
-    print(word)
-print()
+for elem in generator(txt, sep='i'):
+    print(elem)
 
-text = "Lorem Ipsum Lorem Ipsum"
-for word in generator(text, sep=" ", option="unique"):
-    print(word)
-print()
-
-text = 1.0
-for word in generator(text, sep="."):
-    print(word)
+for elem in generator(txt, sep='si'):
+    print(elem)

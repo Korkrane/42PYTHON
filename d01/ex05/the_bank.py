@@ -85,17 +85,21 @@ class Bank(object):
 
             if self.accIsCorrupted(origin) or self.accIsCorrupted(dest):
                 # print("One of the account is corrupted")
+                print('False')
                 return False
 
             if type(amount) != float and type(amount) != int:
+                print('False')
                 return False
 
             if amount < 0:
                 # print("Negative value transfer")
+                print('False')
                 return False
 
             if origin.value < amount:
                 # print("Account doesn't have enough money")
+                print('False')
                 return False
         except ValueError:
             return False
@@ -107,6 +111,7 @@ class Bank(object):
         # make the transfer
         dest.transfer(amount)
         origin.transfer(-amount)
+        print(True)
         return True
 
     def fix_account(self, name):
