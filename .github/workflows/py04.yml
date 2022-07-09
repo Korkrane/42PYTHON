@@ -3,9 +3,9 @@ name: 42-project-badge
 on:
 
   push:
-    branches: [ "main/d04" ]
-  pull_request:
-    branches: [ "main/d04" ]
+    branches: [ "main" ]
+  paths:
+      - d04/**
   workflow_dispatch:
 
 jobs:
