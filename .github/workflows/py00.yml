@@ -3,8 +3,8 @@ on:
 
   push:
     branches: [ "main" ]
-    paths:
-        - d00/**
+  pull_request:
+    branches: [ "main" ]
   workflow_dispatch:
 
 jobs:
