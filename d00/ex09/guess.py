@@ -9,7 +9,6 @@ print()
 toFind = random.randint(1, 99)
 i = 0
 
-print(toFind)
 while True:
     print("What's your guess between 1 and 99?")
     triedValue = input(">> ")
@@ -17,7 +16,7 @@ while True:
         if triedValue == "exit":
             print("Goodbye!")
             exit()
-        triedValue = int(triedValue)  # catch the valueError
+        triedValue = int(triedValue)
         if triedValue < toFind:
             print("Too low!")
         elif triedValue > toFind:
