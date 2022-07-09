@@ -18,6 +18,6 @@ jobs:
         uses: Korkrane/42project-badge-action@v1.0.1
         with:
           login: bahaas
-          project: 'Python Module 00'
+          project: "Python Module 00"
           auth: ${{ secrets.GIST_SECRET }}
           gistID: 990a037d04c9a3b71a62aa5df94cac00
