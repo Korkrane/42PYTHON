@@ -1,0 +1,60 @@
+import numpy
+
+# https://numpy.org/doc/stable/user/basics.creation.html
+
+
+class NumPyCreator:
+    def from_list(self, lst):
+        if isinstance(lst, list):
+            # check if each list as same len
+            if isinstance(lst[0], list):
+                tlen = len(lst[0])
+                for t in lst:
+                    if len(t) != tlen:
+                        return None
+                return numpy.array(lst)
+        else:
+            return None
+
+    def from_tuple(self, tpl):
+        if isinstance(tpl, tuple):
+            # check if each tuple as same len
+            if isinstance(tpl[0], tuple):
+                tlen = len(tpl[0])
+                for t in tpl:
+                    if len(t) != tlen:
+                        return None
+                return numpy.array(tpl)
+        else:
+            return None
+
+    # https://stackoverflow.com/questions/1952464/in-python-how-do-i-determine-if-an-object-is-iterable
+    def from_iterable(self, itr):
+        if hasattr(itr, '__iter__'):
+            return numpy.fromiter(itr, int)
+        else:
+            return None
+
+    # https://numpy.org/doc/stable/reference/routines.array-creation.html
+    def from_shape(self, shape, value=0):
+        if isinstance(shape, tuple):
+            for i in shape:
+                if i < 0:
+                    return None
+            return numpy.zeros(shape)
+        else:
+            return None
+
+    # https://numpy.org/doc/stable/reference/random/generated/numpy.random.rand.html
+    def random(self, shape):
+        if isinstance(shape, tuple):
+            return numpy.random.rand(shape[0], shape[1])
+        else:
+            return None
+
+    # https://numpy.org/doc/stable/reference/generated/numpy.identity.html
+    def identity(self, n):
+        if isinstance(n, int) and n >= 0:
+            return numpy.identity(n)
+        else:
+            return None
