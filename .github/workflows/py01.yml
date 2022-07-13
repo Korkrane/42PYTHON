@@ -1,11 +1,10 @@
 
-name: 42-project-badge
+name: 42-project-badge-d01
 on:
-
   push:
     branches: [ "main" ]
-  paths:
-      - d01/**
+    paths:
+        - d01/**
   workflow_dispatch:
 
 jobs:
