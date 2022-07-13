@@ -4,15 +4,22 @@ from FileLoader import FileLoader
 
 def how_many_medals(df, participant):
 
-    # # if it was correctly made
-    # beforeSportFilter = df.loc[(df['Sex'] == gender) & (df['Year'] == year)]
-    # beforeSportFilterWoDuplicates = beforeSportFilter.drop_duplicates(subset=['Name'])
-    # SportFilterWoDuplicates = beforeSportFilterWoDuplicates.loc[(df['Sport'] == sport)]
-    # return (SportFilterWoDuplicates.shape[0] / beforeSportFilterWoDuplicates.shape[0])
-
     dfParticipant = df.loc[(df['Name'] == participant)]
-    print(dfParticipant)
-    return {}
+    dicta = dfParticipant.to_dict()
+    years = dicta['Year'].values()
+    medals = dicta['Medal'].values()
+    recap = {}
+    for year, medal in zip(years, medals):
+        if year not in recap:
+            recap[year] = {'G': 0, 'S': 0, 'B': 0}
+        if medal == 'Gold':
+            recap[year]['G'] += 1
+        elif medal == 'Silver':
+            recap[year]['S'] += 1
+        elif medal == 'Bronze':
+            recap[year]['B'] += 1
+    return recap
+
 
 
 loader = FileLoader()
