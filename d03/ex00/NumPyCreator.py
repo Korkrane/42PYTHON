@@ -25,6 +25,7 @@ class NumPyCreator:
                     if len(t) != tlen:
                         return None
                 return numpy.array(tpl)
+            return numpy.array(tpl)
         else:
             return None
 
@@ -58,3 +59,20 @@ class NumPyCreator:
             return numpy.identity(n)
         else:
             return None
+
+if __name__ == "__main__":
+    npc = NumPyCreator()
+    print(npc.from_list([[],[]]))
+    print(npc.from_list([[1,2,3],[6,3,4],[8,5,6]]))
+    print(npc.from_tuple(("a","b","c")))
+    print(npc.from_iterable(range(5)))
+    print(npc.from_shape((0, 0)))
+    print(npc.from_shape((3, 5)))
+    print(npc.random((3, 5)))
+    print(npc.identity(4))
+    print(npc.from_list("toto"))
+    print(npc.from_list([[1,2,3],[6,3,4],[8,5,6,7]]))
+    print(npc.from_tuple(3.2))
+    print(npc.from_tuple(((1,5,8),(7,5))))
+    print(npc.from_shape((-1, -1)))
+    print(npc.identity(-1))

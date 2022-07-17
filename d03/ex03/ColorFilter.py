@@ -15,6 +15,8 @@ class ColorFilter:
         -------
         This function should not raise any Exception.
         """
+        if isinstance(array, np.ndarray) is False:
+            return None
         arr = np.copy(array)
         for row in arr:
             for px in row:
@@ -35,6 +37,8 @@ class ColorFilter:
         -------
         This function should not raise any Exception.
         """
+        if isinstance(array, np.ndarray) is False:
+            return None
         arr = np.copy(array)
         for row in arr:
             for px in row:
@@ -55,6 +59,8 @@ class ColorFilter:
         -------
         This function should not raise any Exception.
         """
+        if isinstance(array, np.ndarray) is False:
+            return None
         arr = np.copy(array)
         for row in arr:
             for px in row:
@@ -75,35 +81,16 @@ class ColorFilter:
         -------
         This function should not raise any Exception.
         """
+        if isinstance(array, np.ndarray) is False:
+            return None
         arr = np.copy(array)
         for row in arr:
             for px in row:
                 px[1], px[2] = 0, 0
         return arr
 
-    def to_celluloid(self, array):
-        """
-        Applies a celluloid filter to the image received as a numpy array.
-        Celluloid filter must display at least four thresholds of shades.
-        Be careful! You are not asked to apply black contour on the object,
-        you only have to work on the shades of your images.
-        Remarks:
-        celluloid filter is also known as cel-shading or toon-shading.
-        Args:
-        -----
-        array: numpy.ndarray corresponding to the image.
-        Return:
-        -------
-        array: numpy.ndarray corresponding to the transformed image.
-        None: otherwise.
-        Raises:
-        -------
-        This function should not raise any Exception.
-        """
-        arr = np.copy(array)
-        return arr
-
-    def to_grayscale(self, array, filters, **kwargs):
+    # https://www.delftstack.com/fr/howto/python/convert-image-to-grayscale-python/
+    def to_grayscale(self, array, filter, **kwargs):
         """
         Applies a grayscale filter to the image received as a numpy array.
         For filter = 'mean'/'m': performs the mean of RBG channels.
@@ -122,4 +109,25 @@ class ColorFilter:
         -------
         This function should not raise any Exception.
         """
-        return None
+        if isinstance(array, np.ndarray) is False:
+            return None
+        if filter == 'm' or filter == 'mean':
+            R, G, B = array[:,:,0], array[:,:,1], array[:,:,2]
+            imgGray = 0.2989 * R + 0.5870 * G + 0.1140 * B
+            return imgGray
+        elif filter == 'w' or filter == 'weight':
+            if len(kwargs.keys()) != 1 or 'weights' not in kwargs.keys():
+                return None
+            weights = kwargs['weights']
+            if isinstance(weights, list) is False:
+                return None
+            elif len(weights) != 3:
+                return None
+            for x in weights:
+                if isinstance(x, float) is False:
+                    return None
+            R, G, B = array[:,:,0], array[:,:,1], array[:,:,2]
+            imgGray = weights[0] * R + weights[1] * G + weights[2] * B
+            return imgGray
+        else:
+            return None

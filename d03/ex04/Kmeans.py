@@ -1,121 +1,163 @@
-import random
-import numpy as np
 import sys
-from csvreader import CsvReader
-import matplotlib.pyplot as plt
+import numpy as np
+import random as rd
 
 
 class KmeansClustering:
-    def __init__(self, max_iter=20, ncentroid=5):
-        self.ncentroid = ncentroid # number of centroids
-        self.max_iter = max_iter # number of max iterations to update the centroids
-        self.centroids = [] # values of the centroids
-
-    # https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.figure.html
-    def display3d(self, X):
-        """
-        Show the clusters.
-        """
-        fig = plt.figure()
-        ax = fig.add_subplot(projection='3d')
-        ax.set_xlabel('Height')
-        ax.set_ylabel('Weight')
-        ax.set_zlabel('Bone_density')
-        colors = ['r', 'g', 'b', 'y']
-        for i in range(self.ncentroid):
-            ax.scatter(X[self.clusters[i]][:, 0],
-                       X[self.clusters[i]][:, 1],
-                       X[self.clusters[i]][:, 2],
-                       c=colors[i])
-            ax.scatter(self.centroids[i][0],
-                       self.centroids[i][1],
-                       self.centroids[i][2],
-                       c=colors[i], marker='*')
-        plt.show()
+    def __init__(self, max_iter=20, ncentroid=4):
+        if isinstance(max_iter, int) is False or \
+                isinstance(ncentroid, int) is False:
+            raise ValueError('invalid arguments')
+        if max_iter < 0 or ncentroid < 0:
+            raise ValueError('invalid arguments')
+        self.ncentroid = ncentroid
+        self.max_iter = max_iter
+        self.centroids = []
 
     def fit(self, X):
-        """
-        Run the K-means clustering algorithm.
-        For the location of the initial centroids, random pick ncentroids from the dataset.
-        Args:
-        -----
-        X: has to be an numpy.ndarray, a matrice of dimension m * n.
-        Return:
-        -------
-        None.
-        Raises:
-        -------
-        This function should not raise any Exception.
-        """
-        if not isinstance(X, np.ndarray):
+        if isinstance(X, np.ndarray) is False:
             return None
-        centroid_idx = np.array((random.sample(range(len(X)),
-                                k=self.ncentroid)))
-        self.centroids = np.array([X[idx] for idx in centroid_idx])
-        for i in range(self.max_iter):
-            if i is not 0 and (old_centroids == self.centroids).all():
-                break
-            old_centroids = np.copy(self.centroids)
-            self.predict(X)
-            for k in range(self.ncentroid):
-                self.centroids[k] = np.mean(X[self.clusters[k]], axis=0)
-        if (self.ncentroid == 4):
-            self.display3d(X)
-        print("Centroid populations:")
-        for k in range(self.ncentroid):
-            print(k, ":", len(self.clusters[k]))
+        # enough datapoint for number of desired centroids
+        if X.shape[0] < self.ncentroid:
+            return None
+        self.centroids = np.empty((self.ncentroid, 3))
+
+        # define random centroids
+        for i in range(self.ncentroid):
+            index = rd.randint(0, X.shape[0] - 1)
+            self.centroids[i] = X[index]
+
+        # run max_iter times the kmeans algo
+        # https://medium.com/nerd-for-tech/k-means-python-implementation-from-scratch-8400f30b8e5cd
+        for iteration in range(self.max_iter):
+            cluster = [[] for _ in range(self.ncentroid)]
+            for i, point in enumerate(X):
+                dist = np.empty(self.ncentroid)
+                for j, centroid in enumerate(self.centroids):
+                    dist[j] = np.linalg.norm(point - centroid) # dist from centroids
+                cluster[np.argmin(dist)].append(point) # save it to the closest centroids
+            tmp = self.centroids.copy()
+            #recalculate new centroids mean to adapt them to your clusters
+            for i in range(self.ncentroid):
+                cluster[i] = np.array(cluster[i])
+                if len(cluster[i]) != 0:
+                    n = len(cluster[i])
+                    self.centroids[i] = np.sum(cluster[i], axis=0) / n
+            # if centroids do not change, stop the algo
+            if (tmp == self.centroids).all():
+                return None
         return None
 
     def predict(self, X):
-        """
-        Predict from wich cluster each datapoint belongs to.
-        Args:
-        -----
-        X: has to be an numpy.ndarray, a matrice of dimension m * n.
-        Return:
-        -------
-        the prediction has a numpy.ndarray, a vector of dimension m * 1.
-        Raises:
-        -------
-        This function should not raise any Exception.
-        """
-        self.clusters = list([] for i in range(self.ncentroid))
-        ret = np.zeros(len(X), dtype=int)
-        for j in range(len(X)):
-            min_dist = sys.maxsize
-            min_idx = None
-            for k in range(self.ncentroid):
-                dist = sum(abs(X[j][idx] - self.centroids[k][idx])
-                           for idx in range(len(X[j])))
-                if dist < min_dist:
-                    min_dist = dist
-                    min_idx = k
-            self.clusters[min_idx].append(j)
-            ret[j] = min_idx
-        return ret
+        if isinstance(X, np.ndarray) is False or len(self.centroids) != self.ncentroid:
+            return None
+        predict = []
+        # https://medium.com/nerd-for-tech/k-means-python-implementation-from-scratch-8400f30b8e5cd
+        for point in X:
+            dist = np.empty(self.ncentroid)
+            for j, centroid in enumerate(self.centroids):
+                dist[j] = np.linalg.norm(point - centroid)
+            predict.append(self.centroids[np.argmin(dist)])
+        return np.array(predict)
 
 
-if __name__ == '__main__':
+def parse(argv):
+    names = ['filepath', 'max_iter', 'ncentroid']
+    if len(argv) != 4:
+        return None
+    new_args = {}
+    for i in range(1, len(argv)):
+        tmp = argv[i].split('=')
+        if len(tmp) != 2 or tmp[0] not in names:
+            return None
+        new_args[tmp[0]] = tmp[1]
+    for name in names:
+        if name not in new_args.keys():
+            return None
     try:
-        assert(len(sys.argv) == 4), "Wrong parameters number"
-        assert(sys.argv[1].startswith('filepath=')), "filepath parameter error"
-        assert(sys.argv[2].startswith('ncentroid=')), "ncentroid parameter error"
-        assert(sys.argv[3].startswith('max_iter=')), "max_iter parameter error"
+        new_args['max_iter'] = int(new_args['max_iter'])
+        new_args['ncentroid'] = int(new_args['ncentroid'])
+    except Exception:
+        return None
+    if new_args['max_iter'] < 0 or new_args['ncentroid'] < 0:
+        return None
+    return new_args
 
-        filePath = sys.argv[1].partition('=')[2]
-        ncentroid = int(sys.argv[2].partition('=')[2])
-        max_iter = int(sys.argv[3].partition('=')[2])
+def getPlanets(k):
+    # set the belt
+    i = np.argmax(k.centroids[:, 0])
+    belt = k.centroids[i]
+    # rmv belt and rmv martian cluster to let earth selection between 2 last clusters
+    tmp = k.centroids.copy()
+    tmp = np.delete(tmp, i, 0)
+    earth = tmp.copy()
+    earth = np.delete(earth, np.argmax(tmp[:, 0]), 0)
+    #cuz earth are smaller than martian take the smallest between 2 cluster left
+    i = np.argmin(tmp[:, 1])
+    if (tmp[i] == earth[0]).all():
+        earth = earth[1]
+    else:
+        earth = earth[0]
+    #let in tmp only venus and mars clusters
+    for i in range(len(tmp)):
+        if (tmp[i] == earth).all():
+            tmp = np.delete(tmp, i, 0)
+            break
+    # check which one is mars and venus clusters
+    if (tmp[:, 1] < earth[1]).all() is False:
+        i = np.argmin(tmp[:, 1])
+        venus = tmp[i]
+        mars = tmp[1 - i]
+    else:
+        i = np.argmax(tmp[:, 0])
+        mars = tmp[i]
+        venus = tmp[1 - i]
+    planet = [[] for _ in range(k.ncentroid)]
+    ibelt = np.where(np.all(k.centroids == belt, axis=1))[0][0]
+    iearth = np.where(np.all(k.centroids == earth, axis=1))[0][0]
+    imars = np.where(np.all(k.centroids == mars, axis=1))[0][0]
+    ivenus = np.where(np.all(k.centroids == venus, axis=1))[0][0]
+    planet[iearth] = "Asteroids' Belt colonies"
+    planet[ibelt] = "United Nations of Earth"
+    planet[imars] = "Mars Republic"
+    planet[ivenus] = "The flying cities of Venus"
+    return planet
 
-        assert(isinstance(max_iter, int) and max_iter > 0), "max_iter parameter error"
-        assert(isinstance(ncentroid, int) and ncentroid > 0), "ncentroid parameter error"
-        print(filePath)
-        print(max_iter)
-        print(ncentroid)
-        with CsvReader(filePath, ',', True) as file:
-            assert file, "File error"
-            kmean = KmeansClustering(max_iter, ncentroid)
-            arr = np.array(file.getdata(), dtype=float)
-            print(kmean.__dict__)
-            kmean.fit(arr)
-    except Exception as e:
-        print(e)
+
+def printData(k, predict):
+    if isinstance(predict, np.ndarray) is False:
+        return None
+    if k.ncentroid == 4:
+        planet = getPlanets(k)
+        for i in range(k.ncentroid):
+            count = 0
+            for j in range(len(predict)):
+                if (predict[j] == k.centroids[i]).all():
+                    count += 1
+            print('{} - {} - {} habitants'.format(k.centroids[i], planet[i], count))
+    else:
+        for i in range(k.ncentroid):
+            count = 0
+            for j in range(len(predict)):
+                if (predict[j] == k.centroids[i]).all():
+                    count += 1
+            print('{} - {}'.format(k.centroids[i], count))
+
+from csvreader import CsvReader
+
+if __name__ == "__main__":
+    args = parse(sys.argv)
+    if args is not None:
+        with CsvReader(args['filepath'], ",", True) as csv_file:
+            dataset = np.array(csv_file.getdata(), dtype=float)
+            dataset = np.delete(dataset, 0, 1)
+            if dataset is not None:
+                k = KmeansClustering(args['max_iter'], args['ncentroid'])
+                k.fit(dataset)
+                predict = k.predict(dataset)
+                if predict is None:
+                    pass
+                else:
+                    printData(k, predict)
+    else:
+        pass

@@ -24,3 +24,11 @@ class ImageProcessor:
             plt.show()
         except Exception as e:
             print("Error:", e)
+
+
+if __name__ == "__main__":
+    imp = ImageProcessor()
+    arr = imp.load("42AI.png")
+    # Loading image of dimensions 200 x 200
+    print(arr)
+    imp.display(arr)
